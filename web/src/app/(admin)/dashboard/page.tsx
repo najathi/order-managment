@@ -1,8 +1,4 @@
-interface PageProps {
-
-}
-
-const Page: React.FC<PageProps> = ({ }) => {
+const Page: React.FC = () => {
   return (
     <>
       Dashboard Page

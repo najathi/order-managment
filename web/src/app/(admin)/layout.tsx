@@ -12,7 +12,7 @@ type DashboardLayoutProps = {
   children: React.ReactNode;
 };
 
-const { Content, Sider, Header, Footer } = Layout;
+const { Content, Sider } = Layout;
 
 const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
   const [collapsed, setCollapsed] = useState(true);
