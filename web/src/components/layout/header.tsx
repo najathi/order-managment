@@ -1,79 +1,70 @@
-import React from 'react'
+import React, { useCallback, useMemo } from 'react';
 import { Layout, Menu } from 'antd';
 import type { MenuProps } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
+import { useRouter, usePathname } from 'next/navigation';
 
 const { Header } = Layout;
 
-const items1: MenuProps['items'] = [
-  {
-    label: 'Site 1',
-    key: 's1-1',
-    children: [
+type HeaderCmpProps = object;
+
+const HeaderCmp: React.FC<HeaderCmpProps> = () => {
+  const router = useRouter();
+  const pathname = usePathname();
+
+  const handleLogout = useCallback(() => {
+    // Implement your logout logic here (e.g., clear tokens, API calls)
+    router.push('/');
+  }, [router]);
+
+  const items1: MenuProps['items'] = useMemo(
+    () => [
+      { label: 'Dashboard', key: '/dashboard' },
+      { label: 'Orders', key: '/orders' },
+      { label: 'Products', key: '/products' },
+    ],
+    []
+  );
+
+  const items2: MenuProps['items'] = useMemo(
+    () => [
       {
-        label: 'Order',
-        key: 's1-2',
-      },
-      {
-        label: 'Order 2',
-        key: 's1-3',
+        label: (
+          <>
+            <UserOutlined /> Profile
+          </>
+        ),
+        key: 's2-1',
+        children: [
+          { label: 'Settings', key: '/settings' },
+          { label: 'My Account', key: '/account' },
+          { label: 'Logout', key: '/logout', onClick: handleLogout },
+        ],
       },
     ],
-  },
-  {
-    label: 'Site 2',
-    key: 's1-4',
-  },
-  {
-    label: 'Site 3',
-    key: '5',
-  },
-];
+    [handleLogout]
+  );
 
-const items2: MenuProps['items'] = [
-  {
-    label: <><UserOutlined /> Profile</>,
-    key: 's2-1',
-    children: [
-      {
-        label: 'Settings',
-        key: 's2-2',
-      },
-      {
-        label: 'My Account',
-        key: 's2-3',
-      },
-      {
-        label: 'Logout',
-        key: 's2-4',
-      },
-    ]
-  },
-];
+  const onClick: MenuProps['onClick'] = useCallback(
+    (e: { key: string; }) => {
+      router.push(e.key);
+    },
+    [router]
+  );
 
-interface HeaderCmpProps {
-
-}
-
-const HeaderCmp: React.FC<HeaderCmpProps> = ({ }) => {
   return (
-    <Header
-      className='flex items-center justify-between'
-    >
+    <Header className="flex items-center justify-between">
       <Menu
         theme="dark"
         mode="horizontal"
-        defaultSelectedKeys={['1']}
+        selectedKeys={[pathname]}
         items={items1}
-        className='min-w-0 flex-1'
+        className="min-w-0 flex-1"
+        onClick={onClick}
       />
-      <Menu
-        theme="dark"
-        mode="horizontal"
-        items={items2}
-      />
+      <Menu theme="dark" mode="horizontal" items={items2} />
     </Header>
   );
-}
+};
 
 export default HeaderCmp;

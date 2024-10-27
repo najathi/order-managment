@@ -1,14 +1,10 @@
-import React, { useState } from 'react';
 import { Layout, Menu } from 'antd';
 import {
-  DesktopOutlined,
-  FileOutlined,
-  PieChartOutlined,
-  TeamOutlined,
-  UserOutlined,
+  DesktopOutlined, PieChartOutlined, UserOutlined
 } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
-import Image from 'next/image'; // Next.js optimized Image component
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 const { Sider } = Layout;
 
@@ -34,21 +30,18 @@ function getItem(
 }
 
 const items: MenuItem[] = [
-  getItem('Option 1', '1', <PieChartOutlined />),
-  getItem('Option 2', '2', <DesktopOutlined />),
-  getItem('User', 'sub1', <UserOutlined />, [
-    getItem('Tom', '3'),
-    getItem('Bill', '4'),
-    getItem('Alex', '5'),
-  ]),
-  getItem('Team', 'sub2', <TeamOutlined />, [
-    getItem('Team 1', '6'),
-    getItem('Team 2', '8'),
-  ]),
-  getItem('Files', '9', <FileOutlined />),
+  getItem('Dashboard', '/dashboard', <PieChartOutlined />),
+  getItem('Orders', '/orders', <DesktopOutlined />),
+  getItem('Products', '/products', <UserOutlined />),
 ];
 
 const SideBar: React.FC<SideBarProps> = ({ collapsed, setCollapsed }) => {
+  const router = useRouter();
+
+  const onMenuClick: MenuProps['onClick'] = (e) => {
+    router.push(e.key);
+  };
+
   return (
     <Sider
       collapsible
@@ -60,9 +53,10 @@ const SideBar: React.FC<SideBarProps> = ({ collapsed, setCollapsed }) => {
       <Logo />
       <Menu
         theme="dark"
-        defaultSelectedKeys={['1']}
+        defaultSelectedKeys={['/dashboard']}
         mode="inline"
         items={items}
+        onClick={onMenuClick}
       />
     </Sider>
   );

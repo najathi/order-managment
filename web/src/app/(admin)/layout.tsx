@@ -6,7 +6,6 @@ import { Layout, theme } from 'antd';
 import HeaderCmp from '@/components/layout/header';
 import SideBar from '@/components/layout/sideBar';
 import FooterCmp from '@/components/layout/footer';
-import DynamicBreadcrumb from '@/components/dynamicBreadcrumb';
 
 type DashboardLayoutProps = {
   children: React.ReactNode;
@@ -30,7 +29,6 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
       <Layout>
         <HeaderCmp />
         <Content className="px-4" style={{ padding: '16px' }}>
-          <DynamicBreadcrumb />
           <div
             style={{
               padding: 24,

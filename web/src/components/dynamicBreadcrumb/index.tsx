@@ -2,10 +2,7 @@ import { Breadcrumb } from 'antd';
 import { HomeOutlined } from '@ant-design/icons';
 import { usePathname } from 'next/navigation';
 
-type DynamicBreadcrumbProps = {
-}
-
-const DynamicBreadcrumb: React.FC<DynamicBreadcrumbProps> = () => {
+const DynamicBreadcrumb: React.FC = () => {
   const paths = usePathname()
   const pathNames = paths.split('/').filter(path => path)
 
@@ -13,7 +10,6 @@ const DynamicBreadcrumb: React.FC<DynamicBreadcrumbProps> = () => {
 
   return (
     <Breadcrumb
-      style={{ margin: '16px 0' }}
       items={[
         {
           href: '/dashboard',
