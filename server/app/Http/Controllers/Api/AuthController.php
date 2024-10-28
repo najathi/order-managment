@@ -5,63 +5,69 @@ namespace App\Http\Controllers\Api;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\ValidationException;
 
 class AuthController extends BaseController
 {
     /**
      * Register api
      *
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
-    public function register(Request $request): JsonResponse
+    public function register(Request $request)
     {
-        $validator = Validator::make($request->all(), [
+        $fields = $request->validate([
             'name' => 'required|string',
-            'email' => 'required|string|email|unique:users',
-            'password' => 'required|min:8',
-            'c_password' => 'required|min:8|same:password',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required',
         ]);
 
-        if ($validator->fails()) {
-            return $this->sendError($validator->errors()->first(), $validator->errors());
-        }
+        User::create([
+            'name' => $fields['name'],
+            'email' => $fields['email'],
+            'password' => Hash::make($fields['password']),
+        ]);
 
-        $data = $request->all();
-        $data['password'] = bcrypt($data['password']);
-        unset($data['c_password']);
-
-        $user = User::create($data);
-        $success['token'] = $user->createToken('MyApp')->plainTextToken;
-        $success['id'] = $user->id;
-        $success['email'] = $user->email;
-        $success['name'] = $user->name;
-        return $this->sendResponse($success, 'User register successfully.');
+        $response = [
+            'success' => true,
+            'message' => "Registration successful."
+        ];
+        return response()->json($response, 201);
     }
 
     /**
      * Login api
      *
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
-    public function login(Request $request): JsonResponse
+    public function login(Request $request)
     {
-        $data = $request->validate([
+
+        $credentials = $request->validate([
             'email' => 'required|email',
             'password' => 'required',
         ]);
 
-        if (!Auth::attempt($data)) {
-            return $this->sendError('Unauthorised.', ['error' => 'Unauthorised']);
+        $user = User::where('email', $credentials['email'])->first();
+
+        if (!$user || !Hash::check($credentials['password'], $user->password)) {
+
+            throw ValidationException::withMessages([
+                'email' => ['The provided credentials are incorrect.'],
+            ]);
         }
 
-        $user = Auth::user();
-        $success['token'] = $user->createToken('MyApp')->plainTextToken;
-        $success['id'] = $user->id;
-        $success['email'] = $user->email;
-        $success['name'] = $user->name;
-        return $this->sendResponse($success, 'User login successfully.');
+        $token = $user->createToken('authToken')->plainTextToken;
+
+        return response()->json([
+            'success' => true,
+            'user' => $user,
+            'access_token' => $token,
+            'message' => 'Login successful',
+        ], Response::HTTP_OK);
     }
 
     public function logout()

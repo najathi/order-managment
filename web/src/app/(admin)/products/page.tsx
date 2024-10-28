@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { Table, Button, Drawer, Form, Input, message, Space, Flex } from 'antd';
 
-import axios from '@/api';
+import api from '@/api';
 import DynamicBreadcrumb from '@/components/dynamicBreadcrumb';
 
 const Page: React.FC = () => {
@@ -17,7 +17,7 @@ const Page: React.FC = () => {
   const fetchProducts = async () => {
     setLoading(true);
     try {
-      const { data } = await axios.get('/products');
+      const { data } = await api.get('/products');
       setProducts(data);
     } catch {
       message.error('Failed to load products');
@@ -29,10 +29,10 @@ const Page: React.FC = () => {
   const handleSubmit = async (values: any) => {
     try {
       if (selectedProduct) {
-        await axios.put(`/products/${selectedProduct.id}`, values);
+        await api.put(`/products/${selectedProduct.id}`, values);
         message.success('Product updated successfully');
       } else {
-        await axios.post('/products', values);
+        await api.post('/products', values);
         message.success('Product created successfully');
       }
       form.resetFields();
@@ -45,7 +45,7 @@ const Page: React.FC = () => {
 
   const handleDelete = async (id: number) => {
     try {
-      await axios.delete(`/products/${id}`);
+      await api.delete(`/products/${id}`);
       message.success('Product deleted successfully');
       fetchProducts();
     } catch {

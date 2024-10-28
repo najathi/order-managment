@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { Table, Button, Drawer, Form, Select, InputNumber, Space, message, Tag, Flex } from 'antd';
 
-import axios from '@/api';
+import api from '@/api';
 import DynamicBreadcrumb from '@/components/dynamicBreadcrumb';
 
 const { Option } = Select;
@@ -27,7 +27,7 @@ const Page: React.FC = () => {
   const fetchOrders = async () => {
     setLoading(true);
     try {
-      const { data } = await axios.get('/orders');
+      const { data } = await api.get('/orders');
       setOrders(data);
     } catch {
       message.error('Failed to load orders');
@@ -38,7 +38,7 @@ const Page: React.FC = () => {
 
   const fetchProducts = async () => {
     try {
-      const { data } = await axios.get('/products');
+      const { data } = await api.get('/products');
       setProducts(data);
     } catch {
       message.error('Failed to load products');
@@ -55,10 +55,10 @@ const Page: React.FC = () => {
       };
 
       if (selectedOrder) {
-        await axios.put(`/orders/${selectedOrder.id}`, payload);
+        await api.put(`/orders/${selectedOrder.id}`, payload);
         message.success('Order updated successfully');
       } else {
-        await axios.post('/orders', payload);
+        await api.post('/orders', payload);
         message.success('Order created successfully');
       }
 
