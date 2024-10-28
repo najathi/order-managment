@@ -8,7 +8,6 @@
 ```php artisan serve```
 
 <br />
-<br />
 
 ### How to run the web
 ```npm i```
