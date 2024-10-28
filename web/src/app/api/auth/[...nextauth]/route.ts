@@ -1,16 +1,18 @@
 import NextAuth, { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
+import { __APP_BACKEND_URL__, __APP_API_URL__ } from "@/lib/constants";
+
 export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
-      name: "Email and Password",
+      name: "Credentials",
       credentials: {
         email: { label: "Email", type: "email", placeholder: "Your Email" },
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/sanctum/csrf-cookie`, {
+        const res = await fetch(`${__APP_BACKEND_URL__}/sanctum/csrf-cookie`, {
           method: "GET",
         });
 
@@ -58,7 +60,7 @@ export const authOptions: NextAuthOptions = {
         }
         try {
           // console.log(options)
-          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, options)
+          const response = await fetch(`${__APP_API_URL__}/auth/login`, options)
 
           if (response.ok) {
             const res = await response.json()
@@ -95,5 +97,6 @@ export const authOptions: NextAuthOptions = {
     },
   },
 }
+
 const handler = NextAuth(authOptions)
-export { handler as GET, handler as POST }
+export { handler as GET, handler as POST };

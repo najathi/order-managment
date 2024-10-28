@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { Table, Button, Drawer, Form, Select, InputNumber, Space, message, Tag, Flex } from 'antd';
 
-import api from '@/api';
+import useApiAuth from '@/hooks/useAxiosAuth';
 import DynamicBreadcrumb from '@/components/dynamicBreadcrumb';
 
 const { Option } = Select;
@@ -22,12 +22,14 @@ const Page: React.FC = () => {
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<any>(null);
 
+  const authApi = useApiAuth();
+
   const [form] = Form.useForm();
 
   const fetchOrders = async () => {
     setLoading(true);
     try {
-      const { data } = await api.get('/orders');
+      const { data } = await authApi.get('/orders');
       setOrders(data);
     } catch {
       message.error('Failed to load orders');
@@ -38,7 +40,7 @@ const Page: React.FC = () => {
 
   const fetchProducts = async () => {
     try {
-      const { data } = await api.get('/products');
+      const { data } = await authApi.get('/products');
       setProducts(data);
     } catch {
       message.error('Failed to load products');
@@ -55,10 +57,10 @@ const Page: React.FC = () => {
       };
 
       if (selectedOrder) {
-        await api.put(`/orders/${selectedOrder.id}`, payload);
+        await authApi.put(`/orders/${selectedOrder.id}`, payload);
         message.success('Order updated successfully');
       } else {
-        await api.post('/orders', payload);
+        await authApi.post('/orders', payload);
         message.success('Order created successfully');
       }
 
