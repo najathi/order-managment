@@ -16,22 +16,35 @@ const LoginForm: React.FC<LoginFormProps> = () => {
 
   const handleLogin = async (values: any) => {
     const { email, password } = values;
-    const result = await signIn('credentials', {
-      email,
-      password,
-      redirect: false,
-    });
+    try {
+      const result = await signIn('credentials', {
+        email,
+        password,
+        redirect: false,
+      });
 
-    if (result?.error) {
-      console.error('Login failed:', result.error);
-      let errorMessage = 'Login failed';
-      if (result.error === 'Invalid credentials') {
-        errorMessage = 'Invalid email or password';
+      if (result?.error) {
+        console.error('Login failed:', result.error);
+        let errorMessage = 'Login failed';
+        if (result.error === 'Invalid credentials') {
+          errorMessage = 'Invalid email or password';
+        }
+        message.error(errorMessage);
+
+      } else {
+        router.push('/dashboard');
+      }
+    }
+    catch (error: any) {
+      let errorMessage = 'Failed to log in';
+      if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      } else if (error.response?.data?.error) {
+        errorMessage = error.response.data.error;
+      } else if (error.message) {
+        errorMessage = error.message;
       }
       message.error(errorMessage);
-
-    } else {
-      router.push('/dashboard');
     }
   };
 

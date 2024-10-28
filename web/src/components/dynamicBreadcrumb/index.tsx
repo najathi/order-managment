@@ -6,8 +6,6 @@ const DynamicBreadcrumb: React.FC = () => {
   const paths = usePathname()
   const pathNames = paths.split('/').filter(path => path)
 
-  console.log(pathNames);
-
   return (
     <Breadcrumb
       items={[

@@ -15,9 +15,9 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ }) => {
   const router = useRouter();
 
   const handleRegister = async (values: any) => {
-    const { name, email, password } = values;
+    const { password, confirm_password } = values;
 
-    if (password !== values.confirmPassword) {
+    if (password !== confirm_password) {
       form.setFields([
         {
           name: 'confirmPassword',
@@ -27,19 +27,28 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ }) => {
       return;
     }
 
-    const response = await api.post('/auth/register', {
-      name,
-      email,
-      password
-    });
+    try {
+      const response = await api.post('/auth/register', values);
 
-    if (response.status === 201) {
-      router.push('/dashboard');
-      message.success('Account created successfully');
-    }
+      if (response.status === 201) {
+        router.push('/');
+        message.success('Account created successfully');
+      }
 
-    if (response.status === 400) {
-      message.error('Failed to create account');
+      if (response.status === 400) {
+        message.error('Failed to create account');
+      }
+
+    } catch (error: any) {
+      let errorMessage = 'Failed to create account';
+      if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      } else if (error.response?.data?.error) {
+        errorMessage = error.response.data.error;
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+      message.error(errorMessage);
     }
 
   };
@@ -79,7 +88,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ }) => {
           />
         </Form.Item>
         <Form.Item
-          name="confirmPassword"
+          name="confirm_password"
           rules={[{ required: true, message: 'Please confirm your password!' }]}
         >
           <Input.Password
