@@ -16,16 +16,17 @@ const HeaderCmp: React.FC<HeaderCmpProps> = () => {
   const pathname = usePathname();
 
   const handleLogout = useCallback(async () => {
-    await api.post('/auth/logout');
-
-    const res = await signOut({
-      callbackUrl: '/',
-      redirect: true,
-    });
-
-    console.log(res);
-
-    router.push('/');
+    try {
+      await api.post('/auth/logout');
+    } catch (error: any) {
+      console.error('Failed to logout:', error);
+    } finally {
+      await signOut({
+        callbackUrl: '/',
+        redirect: true,
+      });
+      router.push('/');
+    }
   }, [router]);
 
   const items1: MenuProps['items'] = useMemo(
