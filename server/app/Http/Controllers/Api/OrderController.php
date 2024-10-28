@@ -9,6 +9,7 @@ use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
 {
@@ -64,7 +65,7 @@ class OrderController extends Controller
         }
 
         $order = Order::create([
-            'user_id' => auth()->id,
+            'user_id' => auth()->id(),
             'total_price' => $totalPrice,
             'status' => 'pending',
         ]);
@@ -97,11 +98,56 @@ class OrderController extends Controller
     public function update(Request $request, Order $order)
     {
         $request->validate([
+            'items' => 'required|array',
+            'items.*.product_id' => 'required|exists:products,id',
+            'items.*.quantity' => 'required|integer|min:1',
             'status' => 'required|in:pending,completed,cancelled',
         ]);
 
-        $order->update($request->only('status'));
-        return response()->json($order);
+        DB::transaction(function () use ($request, $order) {
+            // Restore product stock from the existing order
+            foreach ($order->items as $item) {
+                $product = Product::find($item->product_id);
+                $product->increment('stock_quantity', $item->quantity);
+            }
+
+            // Delete existing order items
+            $order->items()->delete();
+
+            // Prepare new items and calculate total price
+            $totalPrice = 0;
+            $orderItems = [];
+
+            foreach ($request->items as $item) {
+                $product = Product::findOrFail($item['product_id']);
+
+                if ($product->stock_quantity < $item['quantity']) {
+                    throw new \Exception("Insufficient stock for product: {$product->name}");
+                }
+
+                $product->decrement('stock_quantity', $item['quantity']);
+
+                $orderItems[] = new OrderItem([
+                    'product_id' => $item['product_id'],
+                    'quantity' => $item['quantity'],
+                    'price' => $product->price,
+                ]);
+
+                $totalPrice += $product->price * $item['quantity'];
+            }
+
+            // Update order status and total price
+            $order->update([
+                'user_id' => auth()->id(),
+                'status' => $request->status,
+                'total_price' => $totalPrice,
+            ]);
+
+            // Save the new items
+            $order->items()->saveMany($orderItems);
+        });
+
+        return response()->json($order->load('items.product'));
     }
 
     /**

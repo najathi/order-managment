@@ -1,10 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Table, Button, Drawer, Form, Select, InputNumber, Space, message, Tag, Flex } from 'antd';
+import { Table, Button, Drawer, Form, Select, InputNumber, Space, message, Tag } from 'antd';
 
 import useApiAuth from '@/hooks/useAxiosAuth';
-import DynamicBreadcrumb from '@/components/dynamicBreadcrumb';
 
 const { Option } = Select;
 
@@ -22,14 +21,15 @@ const Page: React.FC = () => {
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<any>(null);
 
-  const authApi = useApiAuth();
+  const apiAuth = useApiAuth();
 
   const [form] = Form.useForm();
 
+  // Fetch orders from the API
   const fetchOrders = async () => {
     setLoading(true);
     try {
-      const { data } = await authApi.get('/orders');
+      const { data } = await apiAuth.get('/orders');
       setOrders(data);
     } catch {
       message.error('Failed to load orders');
@@ -38,29 +38,32 @@ const Page: React.FC = () => {
     }
   };
 
+  // Fetch products from the API
   const fetchProducts = async () => {
     try {
-      const { data } = await authApi.get('/products');
+      const { data } = await apiAuth.get('/products');
       setProducts(data);
     } catch {
       message.error('Failed to load products');
     }
   };
 
+  // Handle form submission for creating or updating orders
   const handleSubmit = async (values: any) => {
-    try {
-      const payload = {
-        items: values.items.map((item: any) => ({
-          product_id: item.product_id,
-          quantity: item.quantity,
-        })),
-      };
+    const payload = {
+      status: values.status,
+      items: values.items.map((item: any) => ({
+        product_id: item.product_id,
+        quantity: item.quantity,
+      })),
+    };
 
+    try {
       if (selectedOrder) {
-        await authApi.put(`/orders/${selectedOrder.id}`, payload);
+        await apiAuth.put(`/orders/${selectedOrder.id}`, payload);
         message.success('Order updated successfully');
       } else {
-        await authApi.post('/orders', payload);
+        await apiAuth.post('/orders', payload);
         message.success('Order created successfully');
       }
 
@@ -72,10 +75,12 @@ const Page: React.FC = () => {
     }
   };
 
+  // Open the drawer for creating or editing an order
   const openDrawer = (order: any = null) => {
     setSelectedOrder(order);
     if (order) {
       form.setFieldsValue({
+        status: order.status,
         items: order.items.map((item: any) => ({
           product_id: item.product_id,
           quantity: item.quantity,
@@ -130,29 +135,28 @@ const Page: React.FC = () => {
   ];
 
   return (
-    <>
-      <Flex
-        align='start'
-        justify='space-between'
-      >
-        <DynamicBreadcrumb />
-        <Button type="primary" onClick={() => openDrawer()} className="mb-4">
-          Create Order
-        </Button>
-      </Flex>
-
+    <div className="p-8">
+      <Button type="primary" onClick={() => openDrawer()} className="mb-4">
+        Create Order
+      </Button>
       <Table dataSource={orders} columns={columns} rowKey="id" loading={loading} />
 
       <Drawer
         title={selectedOrder ? 'Edit Order' : 'Create Order'}
-        width={600}
+        width={400}
         onClose={() => setDrawerVisible(false)}
-        open={drawerVisible}
-        styles={{
-          body: { paddingBottom: 80 }
-        }}
+        visible={drawerVisible}
+        bodyStyle={{ paddingBottom: 80 }}
       >
         <Form form={form} onFinish={handleSubmit} layout="vertical">
+          <Form.Item name="status" label="Order Status" rules={[{ required: true }]}>
+            <Select placeholder="Select status">
+              <Option value="pending">Pending</Option>
+              <Option value="completed">Completed</Option>
+              <Option value="cancelled">Cancelled</Option>
+            </Select>
+          </Form.Item>
+
           <Form.List name="items">
             {(fields, { add, remove }) => (
               <>
@@ -198,7 +202,7 @@ const Page: React.FC = () => {
           </div>
         </Form>
       </Drawer>
-    </>
+    </div>
   );
 };
 
