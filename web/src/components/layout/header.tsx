@@ -3,6 +3,9 @@ import { Layout, Menu } from 'antd';
 import type { MenuProps } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import { useRouter, usePathname } from 'next/navigation';
+import { signOut } from 'next-auth/react';
+
+import api from '@/api';
 
 const { Header } = Layout;
 
@@ -12,8 +15,16 @@ const HeaderCmp: React.FC<HeaderCmpProps> = () => {
   const router = useRouter();
   const pathname = usePathname();
 
-  const handleLogout = useCallback(() => {
-    // Implement your logout logic here (e.g., clear tokens, API calls)
+  const handleLogout = useCallback(async () => {
+    await api.post('/auth/logout');
+
+    const res = await signOut({
+      callbackUrl: '/',
+      redirect: true,
+    });
+
+    console.log(res);
+
     router.push('/');
   }, [router]);
 

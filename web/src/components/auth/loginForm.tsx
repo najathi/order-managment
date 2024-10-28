@@ -31,7 +31,7 @@ const LoginForm: React.FC<LoginFormProps> = () => {
       message.error(errorMessage);
 
     } else {
-      router.push('/orders');
+      router.push('/dashboard');
     }
   };
 
