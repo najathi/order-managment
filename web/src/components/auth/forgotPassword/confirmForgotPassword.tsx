@@ -1,8 +1,4 @@
-import React from 'react'
-
-interface ConfirmForgotPasswordProps {
-
-}
+type ConfirmForgotPasswordProps = object;
 
 const ConfirmForgotPassword: React.FC<ConfirmForgotPasswordProps> = ({ }) => {
   return (

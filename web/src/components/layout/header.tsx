@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { Layout, Menu } from 'antd';
 import type { MenuProps } from 'antd';
 import { UserOutlined } from '@ant-design/icons';

@@ -1,10 +1,6 @@
-import React from 'react'
-
 import RegisterForm from '@/components/auth/registerForm';
 
-interface PageProps {
-
-}
+type PageProps = object;
 
 const Page: React.FC<PageProps> = ({ }) => {
   return (

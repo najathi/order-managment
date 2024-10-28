@@ -3,9 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { useState } from 'react'
 
-interface ResetPasswordFormProps {
-
-}
+type ResetPasswordFormProps = object;
 
 const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({ }) => {
   const router = useRouter();

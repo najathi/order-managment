@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Table, Button, Drawer, Form, Select, InputNumber, Space, message, Tag, Flex } from 'antd';
 
 import api from '@/api';

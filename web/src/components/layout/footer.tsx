@@ -1,4 +1,3 @@
-import React from 'react'
 import { Layout } from 'antd';
 
 import { __APP_NAME__ } from '@/lib/constants';
@@ -6,9 +5,7 @@ import Link from 'next/link';
 
 const { Footer } = Layout;
 
-interface FooterCmpProps {
-
-}
+type FooterCmpProps = object;
 
 const FooterCmp: React.FC<FooterCmpProps> = ({ }) => {
   return (

@@ -3,9 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { useState } from 'react'
 
-interface ForgotPasswordProps {
-
-}
+type ForgotPasswordProps = object;
 
 const ForgotPassword: React.FC<ForgotPasswordProps> = ({ }) => {
   const router = useRouter();

@@ -9,7 +9,7 @@ import { __APP_NAME__ } from '@/lib/constants';
 
 type LoginFormProps = object;
 
-const { Title, Text, Link: AntLink, Paragraph } = Typography;
+const { Title, Text, Paragraph } = Typography;
 
 const LoginForm: React.FC<LoginFormProps> = () => {
   const router = useRouter();
@@ -83,11 +83,11 @@ const LoginForm: React.FC<LoginFormProps> = () => {
       </div>
 
       <Paragraph className="text-xs text-center text-gray-500 mt-6">
-        By logging in, you agree to accept our <AntLink href="#" className="text-blue-500 hover:text-blue-800">Privacy Notice</AntLink>.
-        This site is protected by reCAPTCHA and the Google <AntLink href="#" className="text-blue-500 hover:text-blue-800">Privacy Policy</AntLink> and <AntLink href="#" className="text-blue-500 hover:text-blue-800">Terms of Service</AntLink> apply.
+        By logging in, you agree to accept our <Link href="#" className="text-blue-500 hover:text-blue-800">Privacy Notice</Link>.
+        This site is protected by reCAPTCHA and the Google <Link href="#" className="text-blue-500 hover:text-blue-800">Privacy Policy</Link> and <Link href="#" className="text-blue-500 hover:text-blue-800">Terms of Service</Link> apply.
       </Paragraph>
       <Paragraph className="text-xs text-center text-gray-500 mt-4">
-        New to {__APP_NAME__}? <AntLink href="/register" className="text-blue-500 hover:text-blue-800">Get started</AntLink>
+        New to {__APP_NAME__}? <Link href="/register" className="text-blue-500 hover:text-blue-800">Get started</Link>
       </Paragraph>
     </div>
   );
