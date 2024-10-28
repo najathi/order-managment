@@ -14,7 +14,7 @@ class OrderSeeder extends Seeder
     {
         DB::transaction(function () {
             // Create 10 orders
-            Order::factory(10)->create()->each(function ($order) {
+            Order::factory(20)->create()->each(function ($order) {
                 $totalPrice = 0;
 
                 // Create 1-5 order items per order
