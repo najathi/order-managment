@@ -1,4 +1,4 @@
-# order-mgmt
+# order-managment 
 
 ### How to setup and run the server
 ```
