@@ -16,7 +16,6 @@ user auth credentials:
 email: najathi@example.com
 password: abcd1234
 ```
-
 <br />
 
 ### How to run the web
