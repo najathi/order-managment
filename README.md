@@ -13,7 +13,7 @@
 
 ```
 user auth credentials:
-email: najathi@example.com
+email: najathi@example.com,
 password: abcd1234
 ```
 
