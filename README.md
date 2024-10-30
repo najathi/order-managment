@@ -3,7 +3,7 @@
 ### How to setup and run the server
 ```
 composer install
-cp .env.example .env
+cp .env.example .env.local
 php artisan migrate
 php artisan db:seed
 php artisan serve
