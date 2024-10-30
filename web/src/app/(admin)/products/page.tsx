@@ -5,6 +5,7 @@ import { Table, Button, Drawer, Form, Input, message, Space, Flex } from 'antd';
 
 import useApiAuth from '@/hooks/useAxiosAuth';
 import DynamicBreadcrumb from '@/components/dynamicBreadcrumb';
+import withAuth from '@/hooks/withAuth';
 
 const Page: React.FC = () => {
   const [products, setProducts] = useState([]);
@@ -129,4 +130,4 @@ const Page: React.FC = () => {
   );
 };
 
-export default Page;
+export default withAuth(Page);

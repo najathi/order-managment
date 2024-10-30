@@ -5,12 +5,12 @@ import { useSession } from "next-auth/react";
 
 import CountCards from "@/components/countCards";
 import DynamicBreadcrumb from "@/components/dynamicBreadcrumb";
+import withAuth from "@/hooks/withAuth";
 
 const { Title } = Typography;
 
 const Page: React.FC = () => {
   const { data: session } = useSession();
-  console.log(session)
 
   return (
     <>
@@ -29,4 +29,4 @@ const Page: React.FC = () => {
   );
 }
 
-export default Page;
+export default withAuth(Page);

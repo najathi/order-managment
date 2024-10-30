@@ -5,6 +5,7 @@ import { Table, Button, Drawer, Form, Select, InputNumber, Space, message, Tag, 
 
 import useApiAuth from '@/hooks/useAxiosAuth';
 import DynamicBreadcrumb from '@/components/dynamicBreadcrumb';
+import withAuth from '@/hooks/withAuth';
 
 const { Option } = Select;
 
@@ -215,4 +216,4 @@ const Page: React.FC = () => {
   );
 };
 
-export default Page;
+export default withAuth(Page);
