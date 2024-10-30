@@ -1,7 +1,7 @@
 import { Layout } from 'antd';
+import Link from 'next/link';
 
 import { __APP_NAME__ } from '@/lib/constants';
-import Link from 'next/link';
 
 const { Footer } = Layout;
 

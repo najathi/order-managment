@@ -3,7 +3,6 @@ import {
   DesktopOutlined, PieChartOutlined, UserOutlined
 } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
-import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
 const { Sider } = Layout;
@@ -13,6 +12,17 @@ type MenuItem = Required<MenuProps>['items'][number];
 type SideBarProps = {
   collapsed: boolean;
   setCollapsed: (value: boolean) => void;
+};
+
+const siderStyle: React.CSSProperties = {
+  overflow: 'auto',
+  height: '100vh',
+  position: 'fixed',
+  insetInlineStart: 0,
+  top: 64,
+  bottom: 0,
+  scrollbarWidth: 'thin',
+  scrollbarGutter: 'stable',
 };
 
 function getItem(
@@ -49,8 +59,8 @@ const SideBar: React.FC<SideBarProps> = ({ collapsed, setCollapsed }) => {
       onCollapse={(value) => setCollapsed(value)}
       collapsedWidth={collapsed ? 80 : 200}
       className="bg-gray-800"
+      style={siderStyle}
     >
-      <Logo />
       <Menu
         theme="dark"
         defaultSelectedKeys={['/dashboard']}
@@ -61,16 +71,5 @@ const SideBar: React.FC<SideBarProps> = ({ collapsed, setCollapsed }) => {
     </Sider>
   );
 };
-
-const Logo: React.FC = () => (
-  <div className="flex justify-center items-center p-4 bg-white mx-auto my-6">
-    <Image
-      src="/next.svg"
-      alt="Logo"
-      width={40}
-      height={40}
-    />
-  </div>
-);
 
 export default SideBar;

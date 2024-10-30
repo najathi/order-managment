@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { Table, Button, Drawer, Form, Select, InputNumber, Space, message, Tag, Flex } from 'antd';
 
-import useApiAuth from '@/hooks/useAxiosAuth';
+import api from '@/api';
 import DynamicBreadcrumb from '@/components/dynamicBreadcrumb';
 import withAuth from '@/hooks/withAuth';
 
@@ -23,32 +23,30 @@ const Page: React.FC = () => {
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<any>(null);
 
-  const apiAuth = useApiAuth();
-
   const [form] = Form.useForm();
 
   // Fetch orders from the API
   const fetchOrders = useCallback(async () => {
     setLoading(true);
     try {
-      const { data } = await apiAuth.get('/orders');
+      const { data } = await api.get('/orders');
       setOrders(data);
     } catch {
       message.error('Failed to load orders');
     } finally {
       setLoading(false);
     }
-  }, [apiAuth]);
+  }, [api]);
 
   // Fetch products from the API
   const fetchProducts = useCallback(async () => {
     try {
-      const { data } = await apiAuth.get('/products');
+      const { data } = await api.get('/products');
       setProducts(data);
     } catch {
       message.error('Failed to load products');
     }
-  }, [apiAuth]);
+  }, [api]);
 
   // Handle form submission for creating or updating orders
   const handleSubmit = async (values: any) => {
@@ -62,10 +60,10 @@ const Page: React.FC = () => {
 
     try {
       if (selectedOrder) {
-        await apiAuth.put(`/orders/${selectedOrder.id}`, payload);
+        await api.put(`/orders/${selectedOrder.id}`, payload);
         message.success('Order updated successfully');
       } else {
-        await apiAuth.post('/orders', payload);
+        await api.post('/orders', payload);
         message.success('Order created successfully');
       }
 
@@ -153,7 +151,7 @@ const Page: React.FC = () => {
 
       <Drawer
         title={selectedOrder ? 'Edit Order' : 'Create Order'}
-        width={400}
+        width={600}
         onClose={() => setDrawerVisible(false)}
         open={drawerVisible}
         styles={{ body: { paddingBottom: 80 } }}

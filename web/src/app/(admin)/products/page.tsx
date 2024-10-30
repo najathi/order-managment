@@ -3,9 +3,9 @@
 import { useEffect, useState, useCallback } from 'react';
 import { Table, Button, Drawer, Form, Input, message, Space, Flex } from 'antd';
 
-import useApiAuth from '@/hooks/useAxiosAuth';
 import DynamicBreadcrumb from '@/components/dynamicBreadcrumb';
 import withAuth from '@/hooks/withAuth';
+import api from '@/api';
 
 const Page: React.FC = () => {
   const [products, setProducts] = useState([]);
@@ -13,29 +13,27 @@ const Page: React.FC = () => {
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<any>(null);
 
-  const authApi = useApiAuth();
-
   const [form] = Form.useForm();
 
   const fetchProducts = useCallback(async () => {
     setLoading(true);
     try {
-      const { data } = await authApi.get('/products');
+      const { data } = await api.get('/products');
       setProducts(data);
     } catch {
       message.error('Failed to load products');
     } finally {
       setLoading(false);
     }
-  }, [authApi]);
+  }, [api]);
 
   const handleSubmit = async (values: any) => {
     try {
       if (selectedProduct) {
-        await authApi.put(`/products/${selectedProduct.id}`, values);
+        await api.put(`/products/${selectedProduct.id}`, values);
         message.success('Product updated successfully');
       } else {
-        await authApi.post('/products', values);
+        await api.post('/products', values);
         message.success('Product created successfully');
       }
       form.resetFields();
@@ -48,7 +46,7 @@ const Page: React.FC = () => {
 
   const handleDelete = async (id: number) => {
     try {
-      await authApi.delete(`/products/${id}`);
+      await api.delete(`/products/${id}`);
       message.success('Product deleted successfully');
       fetchProducts();
     } catch {

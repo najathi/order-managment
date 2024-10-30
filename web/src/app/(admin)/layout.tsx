@@ -19,28 +19,31 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
-      <Sider width={collapsed ? 80 : 200}>
-        <SideBar
-          collapsed={collapsed}
-          setCollapsed={setCollapsed}
-        />
-      </Sider>
-      
-      <Layout>
-        <HeaderCmp />
-        <Content className="px-4" style={{ padding: '16px' }}>
-          <div
-            style={{
-              padding: 24,
-              minHeight: 360,
-              background: colorBgContainer,
-              borderRadius: borderRadiusLG,
-            }}
-          >
-            {children}
-          </div>
-        </Content>
-        <FooterCmp />
+      <HeaderCmp />
+
+      <Layout hasSider>
+        <Sider width={collapsed ? 80 : 200}>
+          <SideBar
+            collapsed={collapsed}
+            setCollapsed={setCollapsed}
+          />
+        </Sider>
+
+        <Layout>
+          <Content className="px-4" style={{ padding: '16px' }}>
+            <div
+              style={{
+                padding: 24,
+                minHeight: 360,
+                background: colorBgContainer,
+                borderRadius: borderRadiusLG,
+              }}
+            >
+              {children}
+            </div>
+          </Content>
+          <FooterCmp />
+        </Layout>
       </Layout>
     </Layout>
   );

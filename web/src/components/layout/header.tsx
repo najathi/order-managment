@@ -4,10 +4,20 @@ import type { MenuProps } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import { useRouter, usePathname } from 'next/navigation';
 import { signOut, useSession } from 'next-auth/react';
+import Image from 'next/image';
 
 import api from '@/api';
 
 const { Header } = Layout;
+
+const headerStyle: React.CSSProperties = {
+  position: 'sticky',
+  top: 0,
+  zIndex: 1,
+  width: '100%',
+  display: 'flex',
+  alignItems: 'center',
+};
 
 type HeaderCmpProps = object;
 
@@ -70,7 +80,11 @@ const HeaderCmp: React.FC<HeaderCmpProps> = () => {
   );
 
   return (
-    <Header className="flex items-center justify-between">
+    <Header
+      className="flex items-center justify-between"
+      style={headerStyle}
+    >
+      <Logo />
       <Menu
         theme="dark"
         mode="horizontal"
@@ -83,5 +97,16 @@ const HeaderCmp: React.FC<HeaderCmpProps> = () => {
     </Header>
   );
 };
+
+const Logo: React.FC = () => (
+  <div className="flex justify-center items-center p-4 bg-white mx-auto mr-4">
+    <Image
+      src="/next.svg"
+      alt="Logo"
+      width={40}
+      height={40}
+    />
+  </div>
+);
 
 export default HeaderCmp;
