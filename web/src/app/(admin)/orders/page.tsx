@@ -1,9 +1,10 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Table, Button, Drawer, Form, Select, InputNumber, Space, message, Tag } from 'antd';
+import { Table, Button, Drawer, Form, Select, InputNumber, Space, message, Tag, Flex } from 'antd';
 
 import useApiAuth from '@/hooks/useAxiosAuth';
+import DynamicBreadcrumb from '@/components/dynamicBreadcrumb';
 
 const { Option } = Select;
 
@@ -136,17 +137,25 @@ const Page: React.FC = () => {
 
   return (
     <div className="p-8">
-      <Button type="primary" onClick={() => openDrawer()} className="mb-4">
-        Create Order
-      </Button>
+      <Flex
+        align='start'
+        justify='space-between'
+      >
+        <DynamicBreadcrumb />
+
+        <Button type="primary" onClick={() => openDrawer()} className="d-block mb-4 ml-auto">
+          Create
+        </Button>
+      </Flex>
+
       <Table dataSource={orders} columns={columns} rowKey="id" loading={loading} />
 
       <Drawer
         title={selectedOrder ? 'Edit Order' : 'Create Order'}
         width={400}
         onClose={() => setDrawerVisible(false)}
-        visible={drawerVisible}
-        bodyStyle={{ paddingBottom: 80 }}
+        open={drawerVisible}
+        styles={{ body: { paddingBottom: 80 } }}
       >
         <Form form={form} onFinish={handleSubmit} layout="vertical">
           <Form.Item name="status" label="Order Status" rules={[{ required: true }]}>
