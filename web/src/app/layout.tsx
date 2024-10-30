@@ -4,7 +4,7 @@ import { AntdRegistry } from '@ant-design/nextjs-registry';
 
 import { __APP_NAME__ } from '@/lib/constants';
 import Providers from './providers';
-import { getSession } from 'next-auth/react';
+import { getServerSession } from 'next-auth';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -18,7 +18,7 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  const session = await getSession();
+  const session = await getServerSession();
 
   return (
     <html lang="en">

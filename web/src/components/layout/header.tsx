@@ -3,7 +3,7 @@ import { Layout, Menu } from 'antd';
 import type { MenuProps } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import { useRouter, usePathname } from 'next/navigation';
-import { signOut } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
 
 import api from '@/api';
 
@@ -15,7 +15,12 @@ const HeaderCmp: React.FC<HeaderCmpProps> = () => {
   const router = useRouter();
   const pathname = usePathname();
 
+  const { data: session } = useSession();
+
   const handleLogout = useCallback(async () => {
+    if (!session)
+      router.push('/');
+
     try {
       await api.post('/auth/logout');
     } catch (error: any) {
@@ -27,7 +32,7 @@ const HeaderCmp: React.FC<HeaderCmpProps> = () => {
       });
       router.push('/');
     }
-  }, [router]);
+  }, [router, session]);
 
   const items1: MenuProps['items'] = useMemo(
     () => [
@@ -50,11 +55,11 @@ const HeaderCmp: React.FC<HeaderCmpProps> = () => {
         children: [
           { label: 'Settings', key: '/settings' },
           { label: 'My Account', key: '/account' },
-          { label: 'Logout', key: '/logout', onClick: handleLogout },
+          { label: session ? 'Logout' : 'Login', key: '/logout', onClick: handleLogout },
         ],
       },
     ],
-    [handleLogout]
+    [handleLogout, session]
   );
 
   const onClick: MenuProps['onClick'] = useCallback(
