@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { Table, Button, Drawer, Form, Select, InputNumber, Space, message, Tag, Flex } from 'antd';
 
 import useApiAuth from '@/hooks/useAxiosAuth';
@@ -27,7 +27,7 @@ const Page: React.FC = () => {
   const [form] = Form.useForm();
 
   // Fetch orders from the API
-  const fetchOrders = async () => {
+  const fetchOrders = useCallback(async () => {
     setLoading(true);
     try {
       const { data } = await apiAuth.get('/orders');
@@ -37,17 +37,17 @@ const Page: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [apiAuth]);
 
   // Fetch products from the API
-  const fetchProducts = async () => {
+  const fetchProducts = useCallback(async () => {
     try {
       const { data } = await apiAuth.get('/products');
       setProducts(data);
     } catch {
       message.error('Failed to load products');
     }
-  };
+  }, [apiAuth]);
 
   // Handle form submission for creating or updating orders
   const handleSubmit = async (values: any) => {
@@ -96,7 +96,7 @@ const Page: React.FC = () => {
   useEffect(() => {
     fetchOrders();
     fetchProducts();
-  }, []);
+  }, [fetchOrders, fetchProducts]);
 
   const columns = [
     { title: 'Order ID', dataIndex: 'id', key: 'id' },
@@ -136,7 +136,7 @@ const Page: React.FC = () => {
   ];
 
   return (
-    <div className="p-8">
+    <>
       <Flex
         align='start'
         justify='space-between'
@@ -211,7 +211,7 @@ const Page: React.FC = () => {
           </div>
         </Form>
       </Drawer>
-    </div>
+    </>
   );
 };
 

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { Table, Button, Drawer, Form, Input, message, Space, Flex } from 'antd';
 
 import useApiAuth from '@/hooks/useAxiosAuth';
@@ -16,7 +16,7 @@ const Page: React.FC = () => {
 
   const [form] = Form.useForm();
 
-  const fetchProducts = async () => {
+  const fetchProducts = useCallback(async () => {
     setLoading(true);
     try {
       const { data } = await authApi.get('/products');
@@ -26,7 +26,7 @@ const Page: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [authApi]);
 
   const handleSubmit = async (values: any) => {
     try {
@@ -57,7 +57,7 @@ const Page: React.FC = () => {
 
   useEffect(() => {
     fetchProducts();
-  }, []);
+  }, [fetchProducts]);
 
   const columns = [
     { title: 'Name', dataIndex: 'name', key: 'name' },
@@ -84,7 +84,7 @@ const Page: React.FC = () => {
   };
 
   return (
-    <div>
+    <>
       <Flex
         align='start'
         justify='space-between'
@@ -125,7 +125,7 @@ const Page: React.FC = () => {
           </div>
         </Form>
       </Drawer>
-    </div>
+    </>
   );
 };
 

@@ -9,8 +9,6 @@ const useApiAuth = () => {
   const { data: session } = useSession();
   // const refreshToken = useRefreshToken();
 
-  console.log(session);
-
   useEffect(() => {
     const requestIntercept = api.interceptors.request.use(
       (config) => {

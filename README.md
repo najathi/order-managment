@@ -19,3 +19,6 @@ php artisan serve
 ```cp .env.example .env```
 
 ```npm run dev```
+
+#### create secrete using below the command
+```openssl rand -base64 32```
