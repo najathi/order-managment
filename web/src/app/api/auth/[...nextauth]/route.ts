@@ -4,6 +4,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { __APP_BACKEND_URL__, __APP_API_URL__ } from "@/lib/constants";
 
 export const authOptions: NextAuthOptions = {
+  session: { strategy: "jwt" },
   providers: [
     CredentialsProvider({
       name: "Credentials",
